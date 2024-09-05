@@ -1,0 +1,22 @@
+[
+    {
+      "id":1,
+      "servicio":"Lavado de maquinaria",
+      "price":1000
+    },
+    {
+      "id":2,
+      "servicio":"Servicio de mantenimiento",
+      "price":2000
+    },
+    {
+      "id":3,
+      "servicio":"Visita a campo",
+      "price":500
+    },
+    {
+      "id":4,
+      "servicio":"Paquetes de monitoreo",
+      "price":4000
+    }
+  ]

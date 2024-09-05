@@ -1,0 +1,27 @@
+[
+    {
+      "serie":5,
+      "nombreProducto":"Tractor Serie 5",
+      "unidadesCotizables":20
+    },
+    {
+      "serie":6,
+      "nombreProducto":"Tractor Serie 6",
+      "unidadesCotizables":30
+    },
+    {
+      "serie":7,
+      "nombreProducto":"Tractor Serie 7",
+      "unidadesCotizables":40
+    },
+    {
+      "serie":8,
+      "nombreProducto":"Tractor Serie 8",
+      "unidadesCotizables":60
+    },
+    {
+      "serie":9,
+      "nombreProducto":"Tractor Serie 9",
+      "unidadesCotizables":90
+    }
+  ]
