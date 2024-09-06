@@ -29,6 +29,7 @@ function renderizarProductos() {
     productosDiv.style.justifyContent = 'space-between'; 
     productosDiv.style.flexWrap = 'wrap';
     productosDiv.style.gap = '10px';
+    productosDiv.style.height = '60vh';
     productosDiv.innerHTML = ''; 
     const usuario = JSON.parse(localStorage.getItem(`usuario`));
     if (!usuario) return;
@@ -39,10 +40,23 @@ function renderizarProductos() {
         const servicios = datos;
         servicios.forEach(producto => {
             const productoDiv = document.createElement('div');
-            const cssDeProductos = document.getElementById("div")
+            productoDiv.style.backgroundColor = 'lightblue';
+            productoDiv.style.alignItems = 'end'; 
+            productoDiv.style.justifyContent = 'center';
+            productoDiv.style.width = '49%';
+            productoDiv.style.height = 'auto';
+            productoDiv.style.display = 'flex';
+
+
             productoDiv.innerHTML = `
-                <span>${producto.servicio}: $${producto.price * maquina.unidadesCotizables}</span>
-                <button onclick="agregarAlCarrito(${producto.id})">Añadir al Carrito</button>
+                 <div style="display: flex; flex-direction: column; height: 100%; width: 100%; border: 1px solid black; position: relative;">
+        <div style="margin-top: auto; display: flex; justify-content: flex-start; align-items: flex-end;">
+            <span>${producto.servicio}: $${producto.price * maquina.unidadesCotizables}</span>
+        </div>
+        <div style="position: absolute; bottom: 0; right: 0;">
+            <button onclick="agregarAlCarrito(${producto.id})">Añadir al Carrito</button>
+        </div>
+    </div>
             `;
             productosDiv.appendChild(productoDiv);
         });
