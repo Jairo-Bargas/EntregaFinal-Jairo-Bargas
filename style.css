@@ -16,6 +16,9 @@ font-family: "Licorice", cursive; */
     padding: 0;
     box-sizing: border-box;
 }
+body {
+    font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", Helvetica, Arial, sans-serif; 
+  }
 
 header{
     height: 35vh;
@@ -137,12 +140,8 @@ h1{
     height: 70vh;
 }
 h2{
-    text-align: left;
     font-size: 8vh;
     font-family: "El Messiri", sans-serif;
-    padding-left: 18vh;
-    padding-left: 25vh;
-
 }
 
 
@@ -215,6 +214,8 @@ footer a{
     font-size: 30px;
     word-spacing: 15px;
     letter-spacing: 10px;
-    line-height: 5vh;   /* al seleccionar esto con el mismo valor que la altura hace que sea un alineado perfecto en el centro del texto */
+    line-height: 5vh;  
 }
+
+
 

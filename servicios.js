@@ -10,7 +10,11 @@ async function conseguirDatos(url){
         const datosJS = await datosJSON.json()
         return datosJS
     } catch (error) {
-        console.error("error", error)
+        Swal.fire({
+            icon: "error",
+            title: "NO SE PUDO OBTENER LOS DATOS",
+            text: "Disculpe las molestias ocasionadas, pronto se resolverá el problema",
+          });
     }
 }
 
@@ -21,6 +25,10 @@ const seriesOfrecidas = JSON.parse(localStorage.getItem("seriesOfrecidas")) || [
 /* FUNCIÓN PARA CREAR PRODUCTOS */ 
 function renderizarProductos() {
     const productosDiv = document.getElementById('productos');
+    productosDiv.style.display = 'flex';
+    productosDiv.style.justifyContent = 'space-between'; 
+    productosDiv.style.flexWrap = 'wrap';
+    productosDiv.style.gap = '10px';
     productosDiv.innerHTML = ''; 
     const usuario = JSON.parse(localStorage.getItem(`usuario`));
     if (!usuario) return;
@@ -31,8 +39,9 @@ function renderizarProductos() {
         const servicios = datos;
         servicios.forEach(producto => {
             const productoDiv = document.createElement('div');
+            const cssDeProductos = document.getElementById("div")
             productoDiv.innerHTML = `
-                <span>${producto.servicio} - $${producto.price * maquina.unidadesCotizables}</span>
+                <span>${producto.servicio}: $${producto.price * maquina.unidadesCotizables}</span>
                 <button onclick="agregarAlCarrito(${producto.id})">Añadir al Carrito</button>
             `;
             productosDiv.appendChild(productoDiv);
@@ -50,7 +59,11 @@ async function obtenerServicios (){
             localStorage.setItem(`arrayDeServicios`, JSON.stringify(arrayDeServicios))
         })
     } catch (error) {
-        console.error("error", error)
+        Swal.fire({
+            icon: "error",
+            title: "NO SE PUDO OBTENER LOS DATOS",
+            text: "Disculpe las molestias ocasionadas, pronto se resolverá el problema",
+          });
         
     }
 }
@@ -63,7 +76,11 @@ function agregarAlCarrito(id){
     if(encontrarProducto){
         const servicioEnCarrito = carrito.find(p=>p.id === id);
         if(servicioEnCarrito){
-            alert("Este servicio ya está en el carrito")
+            Swal.fire({
+                icon: "error",
+                title: "Acción inválida",
+                text: "El producto seleccionado ya se encuentra en el carrito",
+              });
         } else {
             carrito.push({...encontrarProducto, quantity: 1});
         }
@@ -113,19 +130,60 @@ function eliminarCarrito(id) {
 /* FUNCIÓN DE FINALIZAR LA COMPRA */
 function finalizarCompra(){
     if(carrito.length === 0){
-        alert("Carrito vacío")
+        document.getElementById("finalizarCompra").addEventListener("click", ()=>{
+            Swal.fire("Carrito vacío");
+        })
+       
         return;
-    }
+    } 
     calcularTotalCarrito().then(total => {
         const datosUsuarioFinal = JSON.parse(localStorage.getItem(`usuario`))
-        alert(`Compra finalizada.\nLos datos de su compra son:\nNombre: ${datosUsuarioFinal.nombre.toUpperCase()} ${datosUsuarioFinal.apellido.toUpperCase()}\nPrecio: ${total}`)
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+              confirmButton: "btn btn-success",
+              cancelButton: "btn btn-danger"
+            },
+            buttonsStyling: false
+          });
+          swalWithBootstrapButtons.fire({
+            title: "DESEA FINALIZAR LA COMPRA?",
+            text: "Por favor controle correctamente su pedido",
+
+            showCancelButton: true,
+            confirmButtonText: "Si, finalizar",
+            cancelButtonText: "No, cancelar",
+            reverseButtons: true
+          }).then((result) => {
+            if (result.isConfirmed) {
+              swalWithBootstrapButtons.fire({
+                title: `COMPRA FINALIZADA`,
+                text: `Nombre y Apellido: ${datosUsuarioFinal.nombre.toUpperCase()} ${datosUsuarioFinal.apellido.toUpperCase()} 
+                
+                
+                Precio: $${total}\nMuchas gracias por su compra.`,
+                icon: "success"
+              });
+            } else if (
+              /* Read more about handling dismissals below */
+              result.dismiss === Swal.DismissReason.cancel
+            ) {
+              swalWithBootstrapButtons.fire({
+                title: "CANCELADO",
+              });
+            }
+          });
         carrito = []
         localStorage.setItem(`carrito`, JSON.stringify(carrito))
         renderizarCarrito()
     }).catch(error =>{
-        alert("Error al finalizar compra", error)
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Algo salió mal, vuelva a intentarlo",
+          });
     })
 }
+
 
 document.addEventListener(`DOMContentLoaded`, function() {
     const botonFinalizar = document.getElementById("finalizarCompra");
@@ -135,55 +193,27 @@ document.addEventListener(`DOMContentLoaded`, function() {
 })
     
 
-
-
-/* FUNCIÓN DE INGRESO */
-
-async function login(){
-    const datosUsuario = await conseguirDatos(urlUsuarios);
-    const datosUsuarioTraidos = datosUsuario;
-    const form = document.getElementById('loginForm');
-    form.addEventListener('submit', (event) => {
-       
-        event.preventDefault();
-    
-     
-        const userIDIngresando = document.getElementById('username').value;
-        const passwordIngresando = document.getElementById('password').value;
-        
-   
-        const usuarioEncontrado = datosUsuario.find(usuario => 
-            usuario.id === userIDIngresando && usuario.contrasenia === passwordIngresando
-        );
-      
-        if (usuarioEncontrado) {
-            localStorage.setItem(`usuario`, JSON.stringify(usuarioEncontrado))
-            window.location.href = `pages/servicios.html`;
-            
-        } else {
-            formulario = document.getElementById("loginForm")
-            let notificacion = document.createElement(`p`)
-            notificacion.textContent = `Los datos ingresados son incorrectos`
-            formulario.appendChild(notificacion)
-        }
-    });
-
-}
-
 /* Se crea la función que determina que usuario ingresó */
 function bienvenidaUsuario(){
     window.addEventListener(`DOMContentLoaded`, ()=>{
         const usuario = JSON.parse(localStorage.getItem(`usuario`));
         if(usuario){
             const bienvenida = document.getElementById("bienvenida")
+            const tituloServicios = document.getElementById("tituloServicios")
+            tituloServicios.style.cssText = "text-align: center;";
+           
 
-            bienvenida.textContent = `Bienvenido ${(usuario.nombre).toUpperCase()} ${(usuario.apellido).toUpperCase()}` 
+            bienvenida.textContent = `Bienvenido ${(usuario.nombre).toUpperCase()} ${(usuario.apellido).toUpperCase()}`
+            bienvenida.style = "width: 100%, height: 20vh; text-align: center;"
+            const parrafoEleccion = document.createElement("p")
+            parrafoEleccion.innerHTML = "¿Qué servicio te gustaría elegir?"
+            bienvenida.appendChild(parrafoEleccion)
+            
         }
     })
 }
 
 const run=()=>{
-    login()
     bienvenidaUsuario()
     renderizarCarrito()
     renderizarProductos()
@@ -191,5 +221,3 @@ const run=()=>{
 
 
 run()
-
-
